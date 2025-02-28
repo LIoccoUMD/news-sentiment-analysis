@@ -48,11 +48,19 @@ def titleSentimentAnalysis(titles):
         classifier.model.to("cuda")
     
     results = classifier(dataset["articleTitles"], batch_size=32)
+    return results # These are the scores of whether or not the title is positive or negative
 
-    return results
+def plotSentiment(stations, pos_counts, neg_counts):
+    plt.figure(figsize=(10,6))
+    plt.bar(stations.keys(), pos_counts, label="Positive", color="green")
+    plt.bar(stations.keys(), neg_counts, label="Negative", color="red")
 
-def visualize(stations, pos_counts, neg_counts):
-    return
+    plt.xlabel("News Stations")
+    plt.ylabel("Number of Article Titles")
+    plt.title("Sentiment Analysis of News Titles by Station")
+    plt.legend()
+    # plt.xticks(rotation=45)   
+    plt.show()
 
 # Prints every title along with its lable (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
 def printAllTitles(titles, scores):
@@ -68,16 +76,21 @@ def printPosandNeg(scores, station):
     numNegative = sum(1 for result in scores if result["label"] == "NEGATIVE")
     print(f"{station} number of POSITIVE article titles: {numPositive}")
     print(f"{station} number of NEGATIVE article titles: {numNegative}\n")
+    return numPositive, numNegative
 
 def main():
     print(f"CUDA availability: {torch.cuda.is_available()}")
-    
+    pos_counts = []
+    neg_counts = []
     for station, url in newsStations.items():
         try:
             titles = scrapeTitlesXML(url)
             scores = titleSentimentAnalysis(titles)
-            printPosandNeg(scores,station)
+            numPos, numNeg = printPosandNeg(scores,station)
+            pos_counts.append(numPos)
+            neg_counts.append(numNeg)
         except Exception as e:
             print(f"Error processing {station}: {e}")
+    plotSentiment(newsStations, pos_counts, neg_counts)
 
 main()
