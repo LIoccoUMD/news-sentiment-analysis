@@ -1,6 +1,6 @@
 # News Sentiment Analyzer
 
-This Python project scrapes article titles from the news sitemaps of CNN and Fox News, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage from these two major outlets.
+This Python project scrapes article titles from the news sitemaps of CNN and Fox News, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage from these two major outlets. Analysis is performed on current events so as the articles are uploaded the model adjusts.
 
 ## Features
 
@@ -34,7 +34,19 @@ This Python project scrapes article titles from the news sitemaps of CNN and Fox
 
 ## Installation
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/news-sentiment-analyzer.git
-   cd news-sentiment-analyzer
+1. Clone the repository: ```git clone https://github.com/yourusername/news-sentiment-analyzer.git```
+2. Navigate to the directory: ``` cd news-sentiment-analyzer ```
+3. Install the required dependencies:```pip install -r requirements.txt```
+
+## Example Output
+```
+CUDA availability: True
+CNN Count of POSITIVE scores: 142
+CNN Count of NEGATIVE scores: 155
+FOX Count of POSITIVE scores: 128
+FOX Count of NEGATIVE scores: 169
+BBC Count of POSITIVE scores: 135
+BBC Count of NEGATIVE scores: 162
+Reuters Count of POSITIVE scores: 150
+Reuters Count of NEGATIVE scores: 147
+```
