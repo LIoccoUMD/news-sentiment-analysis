@@ -9,14 +9,25 @@ import lxml # BeautifulSoup uses this to parse xml
 from transformers import pipeline
 import torch
 from datasets import Dataset # Models perform better on datasets
+import matplotlib.pyplot as plt
+
+
+#----------#
+#   Vars   #
+#----------#
+newsStations = {
+    "CNN":"https://www.cnn.com/sitemap/news.xml",
+    "FOX":"https://www.foxnews.com/sitemap.xml?type=news",
+    "BBC":"https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml", # BBC has 3 news urls (news-1, news-2, news-3).
+    "REUTERS":"https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
+    "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news"
+}
+
+
 
 # News stations. Should probably make this a list or maybe even dictionary?
      # newsStations = {BBC1:"...news-1", BBC2:"...news2" BBC3:"...news3"}
-cnn = "https://www.cnn.com/sitemap/news.xml"
-fox = "https://www.foxnews.com/sitemap.xml?type=news"
-bbc = "https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml" # BBC has 3 news urls (news-1, news-2, news-3).
-reuters = "https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml"
-msnbc = "https://www.msnbc.com/sitemap/msnbc/sitemap-news"
+
 
 def scrapeTitlesXML(url):
     response = requests.get(url)
@@ -40,6 +51,9 @@ def titleSentimentAnalysis(titles):
 
     return results
 
+def visualize(stations, pos_counts, neg_counts):
+    return
+
 # Prints every title along with its lable (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
 def printAllTitles(titles, scores):
     for i, (title, result) in enumerate(zip(titles, scores)):
@@ -59,23 +73,23 @@ def main():
     print(f"CUDA availability: {torch.cuda.is_available()}")
     
     # CNN news
-    cnnTitles = scrapeTitlesXML(cnn)
+    cnnTitles = scrapeTitlesXML(newsStations["CNN"])
     cnnScores = titleSentimentAnalysis(cnnTitles)
-    
+
     # Fox news
-    foxTitles = scrapeTitlesXML(fox)
+    foxTitles = scrapeTitlesXML(newsStations["FOX"])
     foxScores = titleSentimentAnalysis(foxTitles)
 
     # BBC news
-    bbcTitles = scrapeTitlesXML(bbc)
+    bbcTitles = scrapeTitlesXML(newsStations["BBC"])
     bbcScores = titleSentimentAnalysis(bbcTitles)
 
     # Reuters
-    reutersTitles = scrapeTitlesXML(reuters)
+    reutersTitles = scrapeTitlesXML(newsStations["REUTERS"])
     reutersScores = titleSentimentAnalysis(reutersTitles)
 
     # MSNBC
-    msnbcTitles = scrapeTitlesXML(msnbc)
+    msnbcTitles = scrapeTitlesXML(newsStations["MSNBC"])
     msnbcScores = titleSentimentAnalysis(msnbcTitles)
 
     printPosandNeg(cnnScores, "CNN")
