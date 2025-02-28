@@ -14,7 +14,7 @@ from datasets import Dataset # Models perform better on datasets
 cnn = "https://www.cnn.com/sitemap/news.xml"
 fox = "https://www.foxnews.com/sitemap.xml?type=news"
 bbc = "https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml" # BBC has 3 news urls (news-1, news-2, news-3).
-
+reuters = "https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml"
 
 
 def scrapeTitlesXML(url):
@@ -67,9 +67,13 @@ def main():
     bbcTitles = scrapeTitlesXML(bbc)
     bbcScores = titleSentimentAnalysis(bbcTitles)
 
+    #Reuters
+    reutersTitles = scrapeTitlesXML(reuters)
+    reutersScores = titleSentimentAnalysis(reutersTitles)
 
     printPosandNeg(cnnScores, "CNN")
     printPosandNeg(foxScores, "FOX")
     printPosandNeg(bbcScores, "BBC")
+    printPosandNeg(reutersScores, "Reuters")
 
 main()
