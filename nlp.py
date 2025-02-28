@@ -10,9 +10,13 @@ from transformers import pipeline
 import torch
 from datasets import Dataset # Models perform better on datasets
 
+
 cnn = "https://www.cnn.com/sitemap/news.xml"
 fox = "https://www.foxnews.com/sitemap.xml?type=news"
-# Scrape the url for
+bbc = "https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml" # BBC has 3 news urls (news-1, news-2, news-3).
+
+
+
 def scrapeTitlesXML(url):
     response = requests.get(url)
     # Store the xml 
@@ -33,7 +37,6 @@ def titleSentimentAnalysis(titles):
         classifier.model.to("cuda")
     
     results = classifier(dataset["articleTitles"], batch_size=32)
-    print(f"CUDA availability: {torch.cuda.is_available()}")
 
     return results
 
@@ -53,13 +56,21 @@ def printPosandNeg(scores, station):
     print(f"{station} Count of NEGATIVE scores: {numNegative}")
 
 def main():
+    print(f"CUDA availability: {torch.cuda.is_available()}")
     # CNN news
     cnnTitles = scrapeTitlesXML(cnn)
     cnnScores = titleSentimentAnalysis(cnnTitles)
     # Fox news
     foxTitles = scrapeTitlesXML(fox)
     foxScores = titleSentimentAnalysis(foxTitles)
+
+    # BBC news
+    bbcTitles = scrapeTitlesXML(bbc)
+    bbcScores = titleSentimentAnalysis(bbcTitles)
+
+
     printPosandNeg(cnnScores, "CNN")
     printPosandNeg(foxScores, "FOX")
+    printPosandNeg(foxScores, "BBC")
 
 main()
