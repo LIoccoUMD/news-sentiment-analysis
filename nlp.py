@@ -72,30 +72,9 @@ def printPosandNeg(scores, station):
 def main():
     print(f"CUDA availability: {torch.cuda.is_available()}")
     
-    # CNN news
-    cnnTitles = scrapeTitlesXML(newsStations["CNN"])
-    cnnScores = titleSentimentAnalysis(cnnTitles)
-
-    # Fox news
-    foxTitles = scrapeTitlesXML(newsStations["FOX"])
-    foxScores = titleSentimentAnalysis(foxTitles)
-
-    # BBC news
-    bbcTitles = scrapeTitlesXML(newsStations["BBC"])
-    bbcScores = titleSentimentAnalysis(bbcTitles)
-
-    # Reuters
-    reutersTitles = scrapeTitlesXML(newsStations["REUTERS"])
-    reutersScores = titleSentimentAnalysis(reutersTitles)
-
-    # MSNBC
-    msnbcTitles = scrapeTitlesXML(newsStations["MSNBC"])
-    msnbcScores = titleSentimentAnalysis(msnbcTitles)
-
-    printPosandNeg(cnnScores, "CNN")
-    printPosandNeg(foxScores, "FOX")
-    printPosandNeg(bbcScores, "BBC")
-    printPosandNeg(reutersScores, "Reuters")
-    printPosandNeg(msnbcScores, "MSNBC")
+    for station, url in newsStations.items():
+        titles = scrapeTitlesXML(url)
+        scores = titleSentimentAnalysis(titles)
+        printPosandNeg(scores,station)
 
 main()
