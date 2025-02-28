@@ -23,7 +23,6 @@ def scrapeTitlesXML(url):
     content = response.text
     # Soupify!
     soup = BeautifulSoup(content, "xml")
-    # Tokenize the title of every article
     titles = soup.find_all("news:title") # 297 article titles total
     return titles
 
