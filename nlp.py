@@ -73,8 +73,11 @@ def main():
     print(f"CUDA availability: {torch.cuda.is_available()}")
     
     for station, url in newsStations.items():
-        titles = scrapeTitlesXML(url)
-        scores = titleSentimentAnalysis(titles)
-        printPosandNeg(scores,station)
+        try:
+            titles = scrapeTitlesXML(url)
+            scores = titleSentimentAnalysis(titles)
+            printPosandNeg(scores,station)
+        except Exception as e:
+            print(f"Error processing {station}: {e}")
 
 main()
