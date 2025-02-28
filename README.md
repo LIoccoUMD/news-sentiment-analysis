@@ -43,12 +43,16 @@ This Python project scrapes article titles from the news sitemaps of CNN and Fox
 ## Example Output
 ```
 CUDA availability: True
-CNN Count of POSITIVE scores: 142
-CNN Count of NEGATIVE scores: 155
-FOX Count of POSITIVE scores: 128
-FOX Count of NEGATIVE scores: 169
-BBC Count of POSITIVE scores: 135
-BBC Count of NEGATIVE scores: 162
-Reuters Count of POSITIVE scores: 150
-Reuters Count of NEGATIVE scores: 147
+Device set to use cuda:0
+Device set to use cuda:0
+Device set to use cuda:0
+Device set to use cuda:0
+CNN Count of POSITIVE scores: 91
+CNN Count of NEGATIVE scores: 185
+FOX Count of POSITIVE scores: 99
+FOX Count of NEGATIVE scores: 223
+BBC Count of POSITIVE scores: 389
+BBC Count of NEGATIVE scores: 608
+Reuters Count of POSITIVE scores: 11
+Reuters Count of NEGATIVE scores: 39
 ```
