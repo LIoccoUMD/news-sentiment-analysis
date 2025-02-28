@@ -33,7 +33,7 @@ def titleSentimentAnalysis(titles):
     headlines = [title.text for title in titles]
     dataset = Dataset.from_dict({"articleTitles": headlines})
     classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
-    if torch.cuda.is_available():
+    if torch.cuda.is_available(): # Stop this from printing
         classifier.model.to("cuda")
     
     results = classifier(dataset["articleTitles"], batch_size=32)
@@ -71,6 +71,6 @@ def main():
 
     printPosandNeg(cnnScores, "CNN")
     printPosandNeg(foxScores, "FOX")
-    printPosandNeg(foxScores, "BBC")
+    printPosandNeg(bbcScores, "BBC")
 
 main()
