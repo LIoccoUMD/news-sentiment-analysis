@@ -93,4 +93,6 @@ def main():
             print(f"Error processing {station}: {e}")
     plotSentiment(newsStations, pos_counts, neg_counts)
 
-main()
+
+if __name__ == "__main__":
+    main()
