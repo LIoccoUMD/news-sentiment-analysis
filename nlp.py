@@ -20,7 +20,8 @@ newsStations = {
     "FOX":"https://www.foxnews.com/sitemap.xml?type=news",
     "BBC":"https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml", # BBC has 3 news urls (news-1, news-2, news-3).
     "REUTERS":"https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
-    "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news"
+    "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news",
+    "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml"
 }
 
 
