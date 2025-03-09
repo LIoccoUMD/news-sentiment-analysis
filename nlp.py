@@ -10,11 +10,20 @@ from transformers import pipeline
 import torch
 from datasets import Dataset # Models perform better on datasets
 import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+# import mysql.connector
 
 
 #----------#
 #   Vars   #
 #----------#
+
+# Database Setup
+# db = {
+   
+#   }
+
+
 newsStations = {
     "CNN":"https://www.cnn.com/sitemap/news.xml",
     "FOX":"https://www.foxnews.com/sitemap.xml?type=news",
@@ -23,12 +32,6 @@ newsStations = {
     "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news",
     "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml"
 }
-
-
-
-# News stations. Should probably make this a list or maybe even dictionary?
-     # newsStations = {BBC1:"...news-1", BBC2:"...news2" BBC3:"...news3"}
-
 
 def scrapeTitlesXML(url):
     response = requests.get(url)
@@ -70,7 +73,6 @@ def printAllTitles(titles, scores):
         print(f"  Label: {result['label']}")
         print(f"  Score: {result['score']}\n")
 
-
 # Prints the number of article titles with positive and negative sentiment analysis.
 def printPosandNeg(scores, station):
     numPositive = sum(1 for result in scores if result["label"] == "POSITIVE")
@@ -78,6 +80,18 @@ def printPosandNeg(scores, station):
     print(f"{station} number of POSITIVE article titles: {numPositive}")
     print(f"{station} number of NEGATIVE article titles: {numNegative}\n")
     return numPositive, numNegative
+
+
+def makeWordcloud(url):
+    titles = scrapeTitlesXML(url) 
+    text = " ".join(title.get_text() for title in titles)
+    wordcloud = WordCloud(width=800, height=400,background_color="white",min_font_size=10,collocations=False).generate(text)
+    plt.figure(figsize=(10,5))
+    plt.imshow(wordcloud, interpolation="bilinear")
+    plt.axis("off")
+    plt.show()
+    return wordcloud
+
 
 def main():
     print(f"CUDA availability: {torch.cuda.is_available()}")
@@ -87,12 +101,14 @@ def main():
         try:
             titles = scrapeTitlesXML(url)
             scores = titleSentimentAnalysis(titles)
-            numPos, numNeg = printPosandNeg(scores,station)
-            pos_counts.append(numPos)
-            neg_counts.append(numNeg)
+            # printAllTitles(titles, scores)
+            makeWordcloud(url)
+            # numPos, numNeg = printPosandNeg(scores,station)
+            # pos_counts.append(numPos)
+            # neg_counts.append(numNeg)
         except Exception as e:
             print(f"Error processing {station}: {e}")
-    plotSentiment(newsStations, pos_counts, neg_counts)
+    # plotSentiment(newsStations, pos_counts, neg_counts)
 
 
 if __name__ == "__main__":
