@@ -102,7 +102,7 @@ def main():
             titles = scrapeTitlesXML(url)
             scores = titleSentimentAnalysis(titles)
             # printAllTitles(titles, scores)
-            makeWordcloud(url)
+            # makeWordcloud(url)
             # numPos, numNeg = printPosandNeg(scores,station)
             # pos_counts.append(numPos)
             # neg_counts.append(numNeg)
