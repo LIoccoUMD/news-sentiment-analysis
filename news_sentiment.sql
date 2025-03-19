@@ -1,3 +1,9 @@
+-- Dedicated user for security
+-- CREATE USER 'news_user'@'localhost' IDENTIFIED BY 'password';
+-- GRANT ALL PRIVILEGES ON news_sentiment.* TO 'news_user'@'localhost';
+-- FLUSH PRIVILEGES;
+
+
 -- CREATE DATABASE news_sentiment;
 -- USE news_sentiment;
 -- CREATE TABLE articles (
@@ -10,4 +16,4 @@
 -- );
 -- SHOW TABLES;
 
-FROM news_sentiment SELECT *
+SELECT * FROM articles

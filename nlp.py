@@ -1,7 +1,7 @@
 import nltk
-import numpy
 # nltk.download('punkt_tab')
 # import spaCy
+import numpy
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -11,14 +11,25 @@ import torch
 from datasets import Dataset # Models perform better on datasets
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-import pandas as pd
-
+import mysql.connector as mysql
+from mysql.connector import errorcode
+from tabulate import tabulate
+import os
+from dotenv import load_dotenv
 
 #----------#
 #   Vars   #
 #----------#
 
-# Database Setup
+# Database Credential Retrieval
+load_dotenv()
+db_host = os.getenv("DB_HOST")
+db_database = os.getenv("DB_DATABASE")
+db_user = os.getenv("DB_USER")
+db_password = os.getenv("DB_PASSWORD")
+
+db_connection = mysql.connect(db_host,db_database,db_password,db_user)
+print(db_connection.get_server_info())
 # db = {
 #     news = mysql.connector.connect();
     
@@ -97,22 +108,23 @@ def makeWordcloud(url):
 
 
 def main():
-    print(f"CUDA availability: {torch.cuda.is_available()}")
-    pos_counts = []
-    neg_counts = []
-    for station, url in newsStations.items():
-        try:
-            titles = scrapeTitlesXML(url)
-            scores = titleSentimentAnalysis(titles)
-            # printAllTitles(titles, scores)
-            # makeWordcloud(url)
-            numPos, numNeg = printPosandNeg(scores,station)
-            pos_counts.append(numPos)
-            neg_counts.append(numNeg)
-        except Exception as e:
-            print(f"Error processing {station}: {e}")
-    plotSentiment(newsStations, pos_counts, neg_counts)
+    # print(f"CUDA availability: {torch.cuda.is_available()}")
+    # pos_counts = []
+    # neg_counts = []
+    # for station, url in newsStations.items():
+    #     try:
+    #         titles = scrapeTitlesXML(url)
+    #         scores = titleSentimentAnalysis(titles)
+    #         # printAllTitles(titles, scores)
+    #         # makeWordcloud(url)
+    #         numPos, numNeg = printPosandNeg(scores,station)
+    #         pos_counts.append(numPos)
+    #         neg_counts.append(numNeg)
+    #     except Exception as e:
+    #         print(f"Error processing {station}: {e}")
+    # plotSentiment(newsStations, pos_counts, neg_counts)
 
 
-if __name__ == "__main__":
-    main()
+
+    if __name__ == "__main__":
+        main()
