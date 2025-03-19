@@ -12,9 +12,6 @@ from datasets import Dataset # Models perform better on datasets
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import pandas as pd
-from sqlalchemy import create_engine
-import psycopg2
-import re
 
 
 #----------#
