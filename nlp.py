@@ -28,8 +28,12 @@ db_database = os.getenv("DB_DATABASE")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 
-db_connection = mysql.connect(db_host,db_database,db_password,db_user)
+db_connection = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
 print(db_connection.get_server_info())
+cursor = db_connection.cursor()
+cursor.execute("SELECT * FROM articles")
+print(cursor.fetchall())
+db_connection.close()
 # db = {
 #     news = mysql.connector.connect();
     
