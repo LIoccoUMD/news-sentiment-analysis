@@ -1,7 +1,7 @@
 import nltk
+import numpy
 # nltk.download('punkt_tab')
 # import spaCy
-import numpy
 import requests
 from bs4 import BeautifulSoup
 import time
@@ -11,7 +11,10 @@ import torch
 from datasets import Dataset # Models perform better on datasets
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-# import mysql.connector
+import pandas as pd
+from sqlalchemy import create_engine
+import psycopg2
+import re
 
 
 #----------#
@@ -20,7 +23,10 @@ from wordcloud import WordCloud
 
 # Database Setup
 # db = {
-   
+#     news = mysql.connector.connect();
+    
+
+
 #   }
 
 
@@ -103,12 +109,12 @@ def main():
             scores = titleSentimentAnalysis(titles)
             # printAllTitles(titles, scores)
             # makeWordcloud(url)
-            # numPos, numNeg = printPosandNeg(scores,station)
-            # pos_counts.append(numPos)
-            # neg_counts.append(numNeg)
+            numPos, numNeg = printPosandNeg(scores,station)
+            pos_counts.append(numPos)
+            neg_counts.append(numNeg)
         except Exception as e:
             print(f"Error processing {station}: {e}")
-    # plotSentiment(newsStations, pos_counts, neg_counts)
+    plotSentiment(newsStations, pos_counts, neg_counts)
 
 
 if __name__ == "__main__":
