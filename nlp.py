@@ -23,25 +23,24 @@ from datetime import date
 #----------#
 
 # Database Credential Retrieval
-load_dotenv()
-db_host = os.getenv("DB_HOST")
-db_database = os.getenv("DB_DATABASE")
-db_user = os.getenv("DB_USER")
-db_password = os.getenv("DB_PASSWORD")
-try: 
-    cnx = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
-    print(f"Connected to MySQL ServeR: {cnx.get_server_info()}")
-    cursor = cnx.cursor()
-    cnx.close()
-except mysql.connector.Error as err :
-  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
-    print("Something is wrong with your user name or password")
-  elif err.errno == errorcode.ER_BAD_DB_ERROR:
-    print("Database does not exist")
-  else:
-    print(err)
-else:
-  cnx.close()
+def connect_DB():
+    load_dotenv()
+    db_host = os.getenv("DB_HOST")
+    db_database = os.getenv("DB_DATABASE")
+    db_user = os.getenv("DB_USER")
+    db_password = os.getenv("DB_PASSWORD")
+    try: 
+        cnx = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
+        print(f"Connected to MySQL ServeR: {cnx.get_server_info()}")
+        return cnx
+    except mysql.connector.Error as err :
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+        return None
 
 newsStations = {
     "CNN":"https://www.cnn.com/sitemap/news.xml",
@@ -119,23 +118,29 @@ def makeWordcloud(url):
 
 
 def main():
-    # print(f"CUDA availability: {torch.cuda.is_available()}")
-    # pos_counts = []
-    # neg_counts = []
-    # for station, url in newsStations.items():
-    #     try:
-    #         titles = scrapeTitlesXML(url)
-    #         scores = titleSentimentAnalysis(titles)
-    #         # printAllTitles(titles, scores)
-    #         # makeWordcloud(url)
-    #         numPos, numNeg = printPosandNeg(scores,station)
-    #         pos_counts.append(numPos)
-    #         neg_counts.append(numNeg)
-    #     except Exception as e:
-    #         print(f"Error processing {station}: {e}")
-    # plotSentiment(newsStations, pos_counts, neg_counts)
+    cnx = connect_DB()
+    if cnx is None:
+        return
+    
+    try:
+        print(f"CUDA availability: {torch.cuda.is_available()}")
+        pos_counts = []
+        neg_counts = []
+        for station, url in newsStations.items():
+            try:
+                titles = scrapeTitlesXML(url)
+                scores = titleSentimentAnalysis(titles)
+                printAllTitles(titles, scores)
+                # makeWordcloud(url)
+                numPos, numNeg = printPosandNeg(scores,station)
+                pos_counts.append(numPos)
+                neg_counts.append(numNeg)
+            except Exception as e:
+                print(f"Error processing {station}: {e}")
+                plotSentiment(newsStations, pos_counts, neg_counts)
+                print("nice!")
+    except:
+        print("ok")
 
 
-
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__": main()
