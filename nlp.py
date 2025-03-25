@@ -27,20 +27,16 @@ db_host = os.getenv("DB_HOST")
 db_database = os.getenv("DB_DATABASE")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
-
-db_connection = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
-print(db_connection.get_server_info())
-cursor = db_connection.cursor()
-cursor.execute("SELECT * FROM articles")
-print(cursor.fetchall())
-db_connection.close()
-# db = {
-#     news = mysql.connector.connect();
-    
-
-
-#   }
-
+try: 
+    db_connection = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
+    print(db_connection.get_server_info())
+    cursor = db_connection.cursor()
+    cursor.execute("SELECT * FROM articles")
+    print(cursor.fetchall())
+    db_connection.close()
+except mysql.Error as e :
+    print(f"Failed to connect to database: {e}")
+    exit(1)
 
 newsStations = {
     "CNN":"https://www.cnn.com/sitemap/news.xml",
