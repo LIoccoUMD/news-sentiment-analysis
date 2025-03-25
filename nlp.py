@@ -16,6 +16,7 @@ from mysql.connector import errorcode
 from tabulate import tabulate
 import os
 from dotenv import load_dotenv
+from datetime import date
 
 #----------#
 #   Vars   #
@@ -28,15 +29,19 @@ db_database = os.getenv("DB_DATABASE")
 db_user = os.getenv("DB_USER")
 db_password = os.getenv("DB_PASSWORD")
 try: 
-    db_connection = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
-    print(db_connection.get_server_info())
-    cursor = db_connection.cursor()
-    cursor.execute("SELECT * FROM articles")
-    print(cursor.fetchall())
-    db_connection.close()
-except mysql.Error as e :
-    print(f"Failed to connect to database: {e}")
-    exit(1)
+    cnx = mysql.connect(host=db_host,database=db_database,password=db_password,user=db_user)
+    print(f"Connected to MySQL ServeR: {cnx.get_server_info()}")
+    cursor = cnx.cursor()
+    cnx.close()
+except mysql.connector.Error as err :
+  if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+    print("Something is wrong with your user name or password")
+  elif err.errno == errorcode.ER_BAD_DB_ERROR:
+    print("Database does not exist")
+  else:
+    print(err)
+else:
+  cnx.close()
 
 newsStations = {
     "CNN":"https://www.cnn.com/sitemap/news.xml",
@@ -67,6 +72,12 @@ def titleSentimentAnalysis(titles):
     
     results = classifier(dataset["articleTitles"], batch_size=32)
     return results # These are the scores of whether or not the title is positive or negative
+
+def insertDatabase():
+    
+    return
+
+
 
 def plotSentiment(stations, pos_counts, neg_counts):
     plt.figure(figsize=(10,6))
