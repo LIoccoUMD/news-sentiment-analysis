@@ -48,7 +48,8 @@ newsStations = {
     "BBC":"https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml", # BBC has 3 news urls (news-1, news-2, news-3).
     "REUTERS":"https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
     "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news",
-    "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml"
+    "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml",
+    "CBS":"https://www.cbsnews.com/xml-sitemap/news.xml"
 }
 
 def scrapeTitlesXML(url):
@@ -90,7 +91,7 @@ def plotSentiment(stations, pos_counts, neg_counts):
     # plt.xticks(rotation=45)   
     plt.show()
 
-# Prints every title along with its lable (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
+# Prints every title along with its label (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
 def printAllTitles(titles, scores):
     for i, (title, result) in enumerate(zip(titles, scores)):
         print(f"Title {i+1}: {title.text}")
@@ -130,7 +131,7 @@ def main():
             try:
                 titles = scrapeTitlesXML(url)
                 scores = titleSentimentAnalysis(titles)
-                printAllTitles(titles, scores)
+                # printAllTitles(titles, scores)
                 # makeWordcloud(url)
                 numPos, numNeg = printPosandNeg(scores,station)
                 pos_counts.append(numPos)
