@@ -1,6 +1,6 @@
 # News Sentiment Analyzer
 
-This Python project scrapes article titles from the news sitemaps of CNN and Fox News, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage from these two major outlets. Analysis is performed on current events so as the articles are uploaded the model adjusts.
+This Python project scrapes article titles from news sitemaps, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage. Analysis is performed on current events.
 
 ## Features
 
