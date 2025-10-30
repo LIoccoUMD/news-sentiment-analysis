@@ -8,7 +8,6 @@ import time
 import lxml # BeautifulSoup uses this to parse xml
 from transformers import pipeline
 import torch
-from datasets import Dataset # Models perform better on datasets
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
 import mysql.connector as mysql
@@ -65,12 +64,13 @@ def scrapeTitlesXML(url):
 # Load the sentiment analysis pipeline
 def titleSentimentAnalysis(titles):
     headlines = [title.text for title in titles]
-    dataset = Dataset.from_dict({"articleTitles": headlines})
     classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
+    # print(torch.__version__)  # Should end +cu121
+    # print(torch.cuda.is_available())  # True
     if torch.cuda.is_available(): # TO-DO: Stop this from printing
         classifier.model.to("cuda")
     
-    results = classifier(dataset["articleTitles"], batch_size=32)
+    results = classifier(headlines, batch_size=32)
     return results # These are the scores of whether or not the title is positive or negative
 
 def insertDatabase():
