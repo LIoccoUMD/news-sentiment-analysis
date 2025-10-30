@@ -92,8 +92,10 @@ def plotSentiment(stations, pos_counts, neg_counts):
     plt.show()
 
 # Prints every title along with its label (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
-def printAllTitles(titles, scores):
+def printAllTitles(titles, scores, _numtitles):
     for i, (title, result) in enumerate(zip(titles, scores)):
+        if i >= _numtitles:
+            break
         print(f"Title {i+1}: {title.text}")
         print(f"  Label: {result['label']}")
         print(f"  Score: {result['score']}\n")
@@ -119,23 +121,27 @@ def makeWordcloud(url):
 
 
 def main():
-    cnx = connect_DB()
-    if cnx is None:
-        return
-    
+    # cnx = connect_DB()
+    # if cnx is None:
+        # return
+    if torch.cuda.is_available():
+        print(f"GPU: {torch.cuda.get_device_name(0)} is available.")
+    else:
+        print("No GPU available. Training will run on CPU.")
     try:
         print(f"CUDA availability: {torch.cuda.is_available()}")
         pos_counts = []
         neg_counts = []
         for station, url in newsStations.items():
             try:
-                titles = scrapeTitlesXML(url)
-                scores = titleSentimentAnalysis(titles)
-                # printAllTitles(titles, scores)
+                # titles = scrapeTitlesXML(url)
+                # scores = titleSentimentAnalysis(titles)
+                print(torch.cuda.is_available())
+                # printAllTitles(titles, scores,100)
                 # makeWordcloud(url)
-                numPos, numNeg = printPosandNeg(scores,station)
-                pos_counts.append(numPos)
-                neg_counts.append(numNeg)
+                # numPos, numNeg = printPosandNeg(scores,station)
+                # pos_counts.append(numPos)
+                # neg_counts.append(numNeg)
             except Exception as e:
                 print(f"Error processing {station}: {e}")
                 plotSentiment(newsStations, pos_counts, neg_counts)
