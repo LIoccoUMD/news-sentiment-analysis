@@ -9,6 +9,7 @@ This Python project scrapes article titles from news sitemaps, performs sentimen
   - Fox News: `https://www.foxnews.com/sitemap.xml?type=news`
   - BBC: `https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml`
   - Reuters: `https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml`
+  - etc.
 - Performs sentiment analysis using the `distilbert-base-uncased-finetuned-sst-2-english` model from Hugging Face's Transformers library.
 - Optimizes performance with batch processing and GPU support (CUDA) when available.
 - Outputs the count of positive and negative headlines for each news source.
