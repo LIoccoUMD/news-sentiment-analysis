@@ -1,6 +1,6 @@
 # News Sentiment Analyzer
 
-This Python project scrapes article titles from the news sitemaps of CNN and Fox News, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage from these two major outlets. Analysis is performed on current events so as the articles are uploaded the model adjusts.
+This Python project scrapes article titles from news sitemaps, performs sentiment analysis on the headlines, and provides a breakdown of positive and negative sentiments. Using web scraping and natural language processing (NLP) techniques, it offers insights into the emotional tone of recent news coverage. Analysis is performed on current events.
 
 ## Features
 
@@ -9,6 +9,7 @@ This Python project scrapes article titles from the news sitemaps of CNN and Fox
   - Fox News: `https://www.foxnews.com/sitemap.xml?type=news`
   - BBC: `https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml`
   - Reuters: `https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml`
+  - etc.
 - Performs sentiment analysis using the `distilbert-base-uncased-finetuned-sst-2-english` model from Hugging Face's Transformers library.
 - Optimizes performance with batch processing and GPU support (CUDA) when available.
 - Outputs the count of positive and negative headlines for each news source.
