@@ -41,15 +41,26 @@ def connect_DB():
             print(err)
         return None
 
-newsStations = {
-    "CNN":"https://www.cnn.com/sitemap/news.xml",
-    "FOX":"https://www.foxnews.com/sitemap.xml?type=news",
-    "BBC":"https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml", # BBC has 3 news urls (news-1, news-2, news-3).
-    "REUTERS":"https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
-    "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news",
-    "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml",
-    "CBS":"https://www.cbsnews.com/xml-sitemap/news.xml"
-}
+# newsStations = {
+#     "CNN":"https://www.cnn.com/sitemap/news.xml",
+#     "FOX":"https://www.foxnews.com/sitemap.xml?type=news",
+#     "BBC":"https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml", # BBC has 3 news urls (news-1, news-2, news-3).
+#     "REUTERS":"https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
+#     "MSNBC":"https://www.msnbc.com/sitemap/msnbc/sitemap-news",
+#     "SkyNews":"https://news.sky.com/sitemap/sitemap-news.xml",
+#     "CBS":"https://www.cbsnews.com/xml-sitemap/news.xml"
+# }
+
+def get_news_stations():
+    return {
+        "CNN": "https://www.cnn.com/sitemap/news.xml",
+        "FOX": "https://www.foxnews.com/sitemap.xml?type=news",
+        "BBC": "https://www.bbc.com/sitemaps/https-sitemap-com-news-2.xml",
+        "REUTERS": "https://www.reuters.com/arc/outboundfeeds/news-sitemap/?outputType=xml",
+        "MSNBC": "https://www.msnbc.com/sitemap/msnbc/sitemap-news",
+        "SkyNews": "https://news.sky.com/sitemap/sitemap-news.xml",
+        "CBS": "https://www.cbsnews.com/xml-sitemap/news.xml"
+    }
 
 def scrapeTitlesXML(url):
     response = requests.get(url)
@@ -79,17 +90,6 @@ def insertDatabase():
 
 
 
-def plotSentiment(stations, pos_counts, neg_counts):
-    plt.figure(figsize=(10,6))
-    plt.bar(stations.keys(), pos_counts, label="Positive", color="green")
-    plt.bar(stations.keys(), neg_counts, label="Negative", color="red")
-
-    plt.xlabel("News Stations")
-    plt.ylabel("Number of Article Titles")
-    plt.title("Sentiment Analysis of News Titles by Station")
-    plt.legend()
-    # plt.xticks(rotation=45)   
-    plt.show()
 
 # Prints every title along with its label (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
 def printAllTitles(titles, scores, _numtitles):
@@ -119,29 +119,36 @@ def makeWordcloud(url):
     plt.show()
     return wordcloud
 
+def plotSentiment(stations, pos_counts, neg_counts):
+    plt.figure(figsize=(10,6))
+    plt.bar(stations.keys(), pos_counts, label="Positive", color="green")
+    plt.bar(stations.keys(), neg_counts, label="Negative", color="red")
+
+    plt.xlabel("News Stations")
+    plt.ylabel("Number of Article Titles")
+    plt.title("Sentiment Analysis of News Titles by Station")
+    plt.legend()
+    # plt.xticks(rotation=45)   
+    plt.show()
 
 def main():
     # cnx = connect_DB()
     # if cnx is None:
         # return
-    if torch.cuda.is_available():
-        print(f"GPU: {torch.cuda.get_device_name(0)} is available.")
-    else:
-        print("No GPU available. Training will run on CPU.")
     try:
         print(f"CUDA availability: {torch.cuda.is_available()}")
         pos_counts = []
         neg_counts = []
         for station, url in newsStations.items():
             try:
-                # titles = scrapeTitlesXML(url)
-                # scores = titleSentimentAnalysis(titles)
-                print(torch.cuda.is_available())
+                titles = scrapeTitlesXML(url)
+                scores = titleSentimentAnalysis(titles)
                 # printAllTitles(titles, scores,100)
                 # makeWordcloud(url)
-                # numPos, numNeg = printPosandNeg(scores,station)
-                # pos_counts.append(numPos)
-                # neg_counts.append(numNeg)
+                numPos, numNeg = printPosandNeg(scores,station)
+                pos_counts.append(numPos)
+                neg_counts.append(numNeg)
+                plotSentiment(station,pos_counts,neg_counts)
             except Exception as e:
                 print(f"Error processing {station}: {e}")
                 plotSentiment(newsStations, pos_counts, neg_counts)
