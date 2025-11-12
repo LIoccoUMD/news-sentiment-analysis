@@ -51,6 +51,9 @@ def connect_DB():
 #     "CBS":"https://www.cbsnews.com/xml-sitemap/news.xml"
 # }
 
+"""
+Returns a dictionary of all processed news stations where the key is the station and the value is the sitemap that gets scraped.
+"""
 def get_news_stations():
     return {
         "CNN": "https://www.cnn.com/sitemap/news.xml",
@@ -72,7 +75,11 @@ def scrapeTitlesXML(url):
     return titles
 
 
-# Load the sentiment analysis pipeline
+"""
+Loads the sentiment analysis pipeline. This function performs the sentiment analysis by processing
+each word in the title of the article using a distilbert model and determining a POSTIVE or NEGATIVE
+score for it. Returns a float between -1 and 1.
+"""
 def titleSentimentAnalysis(titles):
     headlines = [title.text for title in titles]
     classifier = pipeline("sentiment-analysis", model="distilbert-base-uncased-finetuned-sst-2-english")
@@ -88,10 +95,36 @@ def insertDatabase():
     
     return
 
+"""
+Calculates a negativity score for each source and then calculates the percentage difference between
+the specified two sources. The results argument should be taken from the titleSentimentAnalysis function.
+"""
+def score(results:dict,source1:str,source2:str):
+    source1_neg = results[source1]['NEGATIVE']
+    source1_pos = results[source1]['POSITIVE']
+    source2_neg = results[source2]['NEGATIVE']
+    source2_pos = results[source2]['POSITIVE']
+
+    ns_source1 = source1_neg / (source1_neg + source1_pos)
+    ns_source2 = source2_neg / (source2_neg + source2_pos)
+
+    percent_diff = ((ns_source1 - ns_source2) / ns_source2) * 100
+
+    comparative_statement = f"{source1} News sentiment is {abs(percent_diff):.2f}% "
+
+    if percent_diff > 0:
+        comparative_statement += f"more negative than {source2}."
+    else:
+        comparative_statement += f"less negative than {source2}."
+
+    print(comparative_statement)
+    return percent_diff
 
 
 
-# Prints every title along with its label (POSTIIVE OR NEGATIVE) and it's score (-1 to 1)
+"""
+Prints every title along with its label, POSITIVE or NEGATIVE, and its score which is between -1 and 1.
+"""
 def printAllTitles(titles, scores, _numtitles):
     for i, (title, result) in enumerate(zip(titles, scores)):
         if i >= _numtitles:
@@ -100,7 +133,10 @@ def printAllTitles(titles, scores, _numtitles):
         print(f"  Label: {result['label']}")
         print(f"  Score: {result['score']}\n")
 
-# Prints the number of article titles with positive and negative sentiment analysis.
+"""
+Prints the number of article titles with positive and negative sentiment analysis.
+Returns a tuple of the number of articles perceived as POSITIVE and NEGATIVE for station.
+"""
 def printPosandNeg(scores, station):
     numPositive = sum(1 for result in scores if result["label"] == "POSITIVE")
     numNegative = sum(1 for result in scores if result["label"] == "NEGATIVE")
@@ -119,17 +155,15 @@ def makeWordcloud(url):
     plt.show()
     return wordcloud
 
-def plotSentiment(stations, pos_counts, neg_counts):
-    plt.figure(figsize=(10,6))
-    plt.bar(stations.keys(), pos_counts, label="Positive", color="green")
-    plt.bar(stations.keys(), neg_counts, label="Negative", color="red")
-
-    plt.xlabel("News Stations")
-    plt.ylabel("Number of Article Titles")
-    plt.title("Sentiment Analysis of News Titles by Station")
-    plt.legend()
-    # plt.xticks(rotation=45)   
+def compareSentiment(stations, pos_counts, neg_counts):
+    fig, ax = plt.subplots()
+    bottom = numpy.zeros(len(stations))    
+    labels = list(stations.keys())
+    p = ax.bar(labels,pos_counts,neg_counts, 0.5, label="Boolean",bottom=bottom)
+    print(labels)
     plt.show()
+    
+    pass
 
 def main():
     # cnx = connect_DB()
@@ -137,22 +171,28 @@ def main():
         # return
     try:
         print(f"CUDA availability: {torch.cuda.is_available()}")
+        all_station_results = {}
         pos_counts = []
         neg_counts = []
-        for station, url in newsStations.items():
+        stations = get_news_stations()
+        for station, url in stations.items():
             try:
                 titles = scrapeTitlesXML(url)
                 scores = titleSentimentAnalysis(titles)
                 # printAllTitles(titles, scores,100)
                 # makeWordcloud(url)
                 numPos, numNeg = printPosandNeg(scores,station)
+
+                all_station_results[station] = {
+                    "POSITIVE": numPos,
+                    "NEGATIVE": numNeg
+                }
                 pos_counts.append(numPos)
                 neg_counts.append(numNeg)
-                plotSentiment(station,pos_counts,neg_counts)
             except Exception as e:
                 print(f"Error processing {station}: {e}")
-                plotSentiment(newsStations, pos_counts, neg_counts)
                 print("nice!")
+        score(all_station_results,"BBC","CBS")
     except:
         print("ok")
 
